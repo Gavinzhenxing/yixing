@@ -11,9 +11,15 @@ if __name__ == '__main__':
     # 全局变量
 
     G = draw_pic()  # 画初始路径图
-    path = get_path(G, start=42, end=49)  # 获取路径图的所有可行路径
+    path1 = get_path(G, start=42, end=49)  # 获取路径图的所有可行路径
+    path2 = get_path(G, start=41, end=51)
+    path = []
+    path.extend(path1)
+    path.extend(path2)
 
-    fitness_list, fitness_list_average, best = ga(path)
+
+
+    fitness_list, fitness_list_average, best = ga(path1, path1)
     print("best",best)
 
     plt.rcParams['font.sans-serif'] = ['KaiTi']  # 指定默认字体

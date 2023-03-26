@@ -5,6 +5,7 @@ import numpy as np
 
 # 全局变量
 K = 20 # 数据流数量
+first_stream = 10 # K条流分2部分，第一部分几条流
 gene_num = 31 # 迭代次数
 cross_prob = 0.6 # 交叉概率    # 0.6~0.9
 mutate_prob = 0.1 # 变异概率   # 0.001~0.01
@@ -13,14 +14,14 @@ individual_num = 60 # 种群规模
 r = [0.8, 0.4, 0.6, 1.2, 0.9, 1.3, 0.7, 1.2, 0.8, 1, 1, 1, 1, 1, 1,1.5, 1.5, 1.5, 1.5, 1.5] # 计算适应度值参数：带宽
 band_min = 1 # 带宽需求最小的流所在位置
 w = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1,0.8, 0.8, 0.8, 0.8, 0.8] # 计算适应度时参数：权重
-random.seed(202)
+random.seed(301)
 
 
 
 
 
 
-def ga(path):
+def ga(path1, path2):
 
     def calculate_fitness(aim_route):
         '''
@@ -203,8 +204,11 @@ def ga(path):
         result_genes, best, average = select(individual_list=individual_list, mutate_genes=mutate_genes)
         return result_genes, best, average
 
-
+    path = []
+    path.extend(path1)
+    path.extend(path2)
     route_delay = get_delay(path)  # 获取所有路径的时延
+
 
     # 初始化种群
     individual_list = []
@@ -212,7 +216,10 @@ def ga(path):
         num = []
         for j in range(K):
             # 随机选择一个元素
-            node = random.randint(0, len(path) - 1)
+            if j < first_stream:  # 前10条数据流走path1
+                node = random.randint(0, len(path1) - 1)
+            else:  # 后10条数据流走path2
+                node = random.randint(0, len(path2) - 1) + len(path1)  # 加上len(path1)以获取正确的索引
             num.append(node)
         if num not in individual_list and judge_load(num):
             # 如果该元素符合要求并且不在individual_list中，则将其添加到individual_list中
