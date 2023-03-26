@@ -29,51 +29,79 @@ def draw_pic():
         nodes.append(i + 1)
     G.add_nodes_from(nodes)
 
-    G.add_edge(1, 2, band=250, time=40)  # 添加边的属性 "band=250,  time"
-    G.add_edge(1, 5, band=250, time=50)
+    G.add_edge(37, 38, band=25, time=10)
+    G.add_edge(37, 43, band=25, time=13.5)
 
-    G.add_edge(2, 1, band=250, time=40)
-    G.add_edge(2, 3, band=250, time=40)
-    G.add_edge(2, 6, band=250, time=50)
+    G.add_edge(38, 37, band=25, time=10)
+    G.add_edge(38, 39, band=25, time=10)
+    G.add_edge(38, 44, band=25, time=13.5)
 
-    G.add_edge(3, 2, band=250, time=40)
-    G.add_edge(3, 4, band=250, time=40)
-    G.add_edge(3, 7, band=250, time=50)
+    G.add_edge(39, 38, band=25, time=10)
+    G.add_edge(39, 40, band=25, time=10)
+    G.add_edge(39, 45, band=25, time=13.5)
 
-    G.add_edge(4, 3, band=250, time=40)
-    G.add_edge(4, 8, band=250, time=50)
+    G.add_edge(40, 39, band=25, time=10)
+    G.add_edge(40, 41, band=25, time=10)
+    G.add_edge(40, 46, band=25, time=13.5)
 
-    G.add_edge(5, 1, band=250, time=50)
-    G.add_edge(5, 6, band=250, time=30)
-    G.add_edge(5, 9, band=250, time=50)
+    G.add_edge(41, 40, band=25, time=10)
+    G.add_edge(41, 42, band=25, time=10)
+    G.add_edge(41, 47, band=25, time=13.5)
 
-    G.add_edge(6, 2, band=250, time=50)
-    G.add_edge(6, 5, band=250, time=30)
-    G.add_edge(6, 7, band=250, time=30)
-    G.add_edge(6, 10, band=250, time=50)
+    G.add_edge(42, 41, band=25, time=10)
+    G.add_edge(42, 48, band=25, time=13.5)
 
-    G.add_edge(7, 3, band=250, time=50)
-    G.add_edge(7, 6, band=250, time=30)
-    G.add_edge(7, 8, band=250, time=30)
-    G.add_edge(7, 11, band=250, time=50)
+    #
+    G.add_edge(43, 37, band=25, time=13.5)
+    G.add_edge(43, 44, band=25, time=14)
+    G.add_edge(43, 49, band=25, time=13.5)
 
-    G.add_edge(8, 4, band=250, time=50)
-    G.add_edge(8, 7, band=250, time=30)
-    G.add_edge(8, 12, band=250, time=50)
+    G.add_edge(44, 38, band=25, time=13.5)
+    G.add_edge(44, 43, band=25, time=14)
+    G.add_edge(44, 45, band=25, time=14)
+    G.add_edge(44, 50, band=25, time=13.5)
 
-    G.add_edge(9, 5, band=250, time=50)
-    G.add_edge(9, 10, band=250, time=30)
+    G.add_edge(45, 39, band=25, time=13.5)
+    G.add_edge(45, 44, band=25, time=14)
+    G.add_edge(45, 46, band=25, time=14)
+    G.add_edge(45, 51, band=25, time=13.5)
 
-    G.add_edge(10, 6, band=250, time=50)
-    G.add_edge(10, 9, band=250, time=30)
-    G.add_edge(10, 11, band=250, time=30)
+    G.add_edge(46, 40, band=25, time=13.5)
+    G.add_edge(46, 45, band=25, time=14)
+    G.add_edge(46, 47, band=25, time=14)
+    G.add_edge(46, 52, band=25, time=13.5)
 
-    G.add_edge(11, 7, band=250, time=50)
-    G.add_edge(11, 10, band=250, time=30)
-    G.add_edge(11, 12, band=250, time=30)
+    G.add_edge(47, 41, band=25, time=13.5)
+    G.add_edge(47, 46, band=25, time=14)
+    G.add_edge(47, 48, band=25, time=14)
+    G.add_edge(47, 53, band=25, time=13.5)
 
-    G.add_edge(12, 8, band=250, time=50)
-    G.add_edge(12, 11, band=250, time=30)
+    G.add_edge(48, 42, band=25, time=13.5)
+    G.add_edge(48, 47, band=25, time=14)
+    G.add_edge(48, 54, band=25, time=13.5)
+
+    #
+    G.add_edge(49, 43, band=25, time=13.5)
+    G.add_edge(49, 50, band=25, time=14)
+
+    G.add_edge(50, 44, band=25, time=13.5)
+    G.add_edge(50, 49, band=25, time=14)
+    G.add_edge(50, 51, band=25, time=14)
+
+    G.add_edge(51, 45, band=25, time=13.5)
+    G.add_edge(51, 50, band=25, time=14)
+    G.add_edge(51, 52, band=25, time=14)
+
+    G.add_edge(52, 46, band=25, time=13.5)
+    G.add_edge(52, 51, band=25, time=14)
+    G.add_edge(52, 53, band=25, time=14)
+
+    G.add_edge(53, 47, band=25, time=13.5)
+    G.add_edge(53, 52, band=25, time=14)
+    G.add_edge(53, 54, band=25, time=14)
+
+    G.add_edge(54, 48, band=25, time=13.5)
+    G.add_edge(54, 53, band=25, time=14)
 
     # 这两行代码解决 plt 中文显示的问题
     plt.rcParams['font.sans-serif'] = ['SimSun']
@@ -273,54 +301,83 @@ def draw_pic():
 
     #
 
-    G.add_edge(49, 50, band=25, time=14)
-    G.add_edge(49, 55, band=25, time=13.5)
+    G.add_edge(37, 38, band=25, time=10)
+    G.add_edge(37, 43, band=25, time=13.5)
 
-    G.add_edge(50, 49, band=25, time=14)
-    G.add_edge(50, 51, band=25, time=14)
-    G.add_edge(50, 56, band=25, time=13.5)
+    G.add_edge(38, 37, band=25, time=10)
+    G.add_edge(38, 39, band=25, time=10)
+    G.add_edge(38, 44, band=25, time=13.5)
 
-    G.add_edge(51, 50, band=25, time=14)
-    G.add_edge(51, 52, band=25, time=14)
-    G.add_edge(51, 57, band=25, time=13.5)
+    G.add_edge(39, 38, band=25, time=10)
+    G.add_edge(39, 40, band=25, time=10)
+    G.add_edge(39, 45, band=25, time=13.5)
 
-    G.add_edge(52, 51, band=25, time=14)
-    G.add_edge(52, 53, band=25, time=14)
-    G.add_edge(52, 58, band=25, time=13.5)
+    G.add_edge(40, 39, band=25, time=10)
+    G.add_edge(40, 41, band=25, time=10)
+    G.add_edge(40, 46, band=25, time=13.5)
 
-    G.add_edge(53, 52, band=25, time=14)
-    G.add_edge(53, 54, band=25, time=14)
-    G.add_edge(53, 59, band=25, time=13.5)
+    G.add_edge(41, 40, band=25, time=10)
+    G.add_edge(41, 42, band=25, time=10)
+    G.add_edge(41, 47, band=25, time=13.5)
 
-    G.add_edge(54, 53, band=25, time=14)
-    G.add_edge(54, 60, band=25, time=13.5)
+    G.add_edge(42, 41, band=25, time=10)
+    G.add_edge(42, 48, band=25, time=13.5)
 
     #
-    G.add_edge(55, 49, band=25, time=13.5)
-    G.add_edge(55, 56, band=25, time=10)
+    G.add_edge(43, 37, band=25, time=13.5)
+    G.add_edge(43, 44, band=25, time=14)
+    G.add_edge(43, 49, band=25, time=13.5)
 
-    G.add_edge(56, 50, band=25, time=13.5)
-    G.add_edge(56, 55, band=25, time=10)
-    G.add_edge(56, 57, band=25, time=10)
+    G.add_edge(44, 38, band=25, time=13.5)
+    G.add_edge(44, 43, band=25, time=14)
+    G.add_edge(44, 45, band=25, time=14)
+    G.add_edge(44, 50, band=25, time=13.5)
 
-    G.add_edge(57, 51, band=25, time=13.5)
-    G.add_edge(57, 56, band=25, time=10)
-    G.add_edge(57, 58, band=25, time=10)
+    G.add_edge(45, 39, band=25, time=13.5)
+    G.add_edge(45, 44, band=25, time=14)
+    G.add_edge(45, 46, band=25, time=14)
+    G.add_edge(45, 51, band=25, time=13.5)
 
-    G.add_edge(58, 52, band=25, time=13.5)
-    G.add_edge(58, 57, band=25, time=10)
-    G.add_edge(58, 59, band=25, time=10)
+    G.add_edge(46, 40, band=25, time=13.5)
+    G.add_edge(46, 45, band=25, time=14)
+    G.add_edge(46, 47, band=25, time=14)
+    G.add_edge(46, 52, band=25, time=13.5)
 
-    G.add_edge(59, 53, band=25, time=13.5)
-    G.add_edge(59, 58, band=25, time=10)
-    G.add_edge(59, 60, band=25, time=10)
+    G.add_edge(47, 41, band=25, time=13.5)
+    G.add_edge(47, 46, band=25, time=14)
+    G.add_edge(47, 48, band=25, time=14)
+    G.add_edge(47, 53, band=25, time=13.5)
 
-    G.add_edge(60, 54, band=25, time=13.5)
-    G.add_edge(60, 59, band=25, time=10)
+    G.add_edge(48, 42, band=25, time=13.5)
+    G.add_edge(48, 47, band=25, time=14)
+    G.add_edge(48, 54, band=25, time=13.5)
+
+    #
+    G.add_edge(49, 43, band=25, time=13.5)
+    G.add_edge(49, 50, band=25, time=14)
+
+    G.add_edge(50, 44, band=25, time=13.5)
+    G.add_edge(50, 49, band=25, time=14)
+    G.add_edge(50, 51, band=25, time=14)
+
+    G.add_edge(51, 45, band=25, time=13.5)
+    G.add_edge(51, 50, band=25, time=14)
+    G.add_edge(51, 52, band=25, time=14)
+
+    G.add_edge(52, 46, band=25, time=13.5)
+    G.add_edge(52, 51, band=25, time=14)
+    G.add_edge(52, 53, band=25, time=14)
+
+    G.add_edge(53, 47, band=25, time=13.5)
+    G.add_edge(53, 52, band=25, time=14)
+    G.add_edge(53, 54, band=25, time=14)
+
+    G.add_edge(54, 48, band=25, time=13.5)
+    G.add_edge(54, 53, band=25, time=14)
 
     # 这两行代码解决 plt 中文显示的问题
-    plt.rcParams['font.sans-serif'] = ['SimSun']
-    plt.rcParams['axes.unicode_minus'] = False
+    # plt.rcParams['font.sans-serif'] = ['SimSun']
+    # plt.rcParams['axes.unicode_minus'] = False
 
 
     nx.draw(G, with_labels=True, node_color='y', pos=pos)
