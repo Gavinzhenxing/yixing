@@ -6,7 +6,7 @@ import numpy as np
 # 全局变量
 K = 20 # 数据流数量
 first_stream = 10 # K条流分2部分，第一部分几条流
-gene_num = 31 # 迭代次数
+gene_num = 310 # 迭代次数
 cross_prob = 0.6 # 交叉概率    # 0.6~0.9
 mutate_prob = 0.1 # 变异概率   # 0.001~0.01
 band_size = 25 # 所有链路带宽均为250
@@ -17,6 +17,11 @@ w = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1,0.8, 0.8, 0.8, 0.8, 0.8] # 计�
 random.seed(301)
 
 
+# 变异所需要变量
+p_m_max = 0.2
+p_m_min = 0.1
+p_m_prime = 0.15
+f_avg_fixed = 0.01
 
 
 
@@ -85,18 +90,37 @@ def ga(path1, path2):
         return point
 
     def cross(individual_list):
-        print("cross前",individual_list)
+        print("cross前", individual_list)
         print('cross')
-        '''
-        交叉
-        :param individual_list: 输入种群
-        :return: 交叉后的种群
-        '''
+
+        def calculate_cross_prob(f_c, f_avg, f_min, f_max):
+            p_c_prime = 0.5
+            p_c_min = 0.6
+            p_c_max = 0.9
+
+            if f_max == f_avg:
+                return p_c_prime
+
+            if f_c < f_avg:
+                p_c = p_c_prime + (p_c_max - p_c_prime) * (f_avg - f_c) / (f_avg - f_min)
+            else:
+                p_c = p_c_prime - (p_c_prime - p_c_min) * (f_c - f_avg) / (f_max - f_avg)
+            return p_c
+
         cross_genes = []
         for i in range(0, len(individual_list) - 1, 2):
-            # 交叉概率
+            # 计算交叉概率
             genes1 = individual_list[i]
             genes2 = individual_list[i + 1]
+            genes1_fitness = calculate_fitness(genes1)
+            genes2_fitness = calculate_fitness(genes2)
+            f_avg = (genes1_fitness + genes2_fitness) / 2
+            f_min = min(genes1_fitness, genes2_fitness)
+            f_max = max(genes1_fitness, genes2_fitness)
+            f_c = max(genes1_fitness, genes2_fitness)
+
+            cross_prob = calculate_cross_prob(f_c, f_avg, f_min, f_max)
+
             if random.random() < cross_prob:
                 genes1_fitness = calculate_fitness(genes1)
                 genes2_fitness = calculate_fitness(genes2)
@@ -128,7 +152,54 @@ def ga(path1, path2):
             else:
                 cross_genes.append(genes1)
                 cross_genes.append(genes2)
+
         return cross_genes
+
+    # def cross(individual_list):
+    #     print("cross前",individual_list)
+    #     print('cross')
+    #     '''
+    #     交叉
+    #     :param individual_list: 输入种群
+    #     :return: 交叉后的种群
+    #     '''
+    #     cross_genes = []
+    #     for i in range(0, len(individual_list) - 1, 2):
+    #         # 交叉概率
+    #         genes1 = individual_list[i]
+    #         genes2 = individual_list[i + 1]
+    #         if random.random() < cross_prob:
+    #             genes1_fitness = calculate_fitness(genes1)
+    #             genes2_fitness = calculate_fitness(genes2)
+    #             if genes1_fitness == genes2_fitness:
+    #                 cross_genes.append(genes1)
+    #                 cross_genes.append(genes2)
+    #                 continue
+    #             elif genes1_fitness < genes2_fitness:
+    #                 # 获得交叉点
+    #                 point = find_point_not(path, judge_path=genes1)
+    #             elif genes2_fitness < genes1_fitness:
+    #                 # 获得交叉点
+    #                 point = find_point_not(path, judge_path=genes2)
+    #
+    #             new_genes1 = []
+    #             new_genes2 = []
+    #             for i in range(0, point):
+    #                 new_genes1.append(genes1[i])
+    #                 new_genes2.append(genes2[i])
+    #             for i in range(point, K):
+    #                 new_genes1.append(genes2[i])
+    #                 new_genes2.append(genes1[i])
+    #             if judge_load(new_genes1) and judge_load(new_genes2):
+    #                 cross_genes.append(new_genes1)
+    #                 cross_genes.append(new_genes2)
+    #             else:
+    #                 cross_genes.append(genes1)
+    #                 cross_genes.append(genes2)
+    #         else:
+    #             cross_genes.append(genes1)
+    #             cross_genes.append(genes2)
+    #     return cross_genes
 
     def mutate(cross_genes):
         print('mutate')
@@ -155,11 +226,6 @@ def ga(path1, path2):
         print("individual_list长度：%s" % len(individual_list))
         print("individual_list:%s" % individual_list)
 
-        '''
-        选择
-        :param mutate_genes:
-        :return:
-        '''
         # 组合数组
         new_genes = []
         new_genes += individual_list
@@ -174,12 +240,18 @@ def ga(path1, path2):
         for i in new_genes:
             all_fitness.append(calculate_fitness(i))
 
-        # 方法1：排序并选择最大的60个适应度值
-        all_fitness_array = np.array(all_fitness)
-        all_fitness_sort_order = np.argsort(-all_fitness_array)
-        result_genes = []
-        for i in range(individual_num):
-            result_genes.append(new_genes[all_fitness_sort_order[i]])
+        # 计算选择概率
+        min_fitness = min(all_fitness)
+        max_fitness = max(all_fitness)
+        selection_prob = [(f - min_fitness) / (max_fitness - min_fitness) for f in all_fitness]
+
+        # 归一化概率
+        selection_prob = np.array(selection_prob)
+        selection_prob /= selection_prob.sum()
+
+        # 根据概率选择新种群
+        selected_indices = np.random.choice(range(len(new_genes)), size=individual_num, p=selection_prob, replace=True)
+        result_genes = [new_genes[i] for i in selected_indices]
 
         print("result_genes:%s" % result_genes)
 
