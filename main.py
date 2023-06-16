@@ -49,6 +49,7 @@ if __name__ == '__main__':
     for i in range(len(path)):
         path_dic[i] = path[i]
     print("所有链路",path_dic)
+    plt.savefig("./pic/last.pdf", dpi=300)
     plt.show()
     print(fitness_list)
     print(fitness_list_average)

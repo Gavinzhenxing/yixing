@@ -7,21 +7,14 @@ import numpy as np
 K = 20 # 数据流数量
 first_stream = 10 # K条流分2部分，第一部分几条流
 gene_num = 310 # 迭代次数
-cross_prob = 0.6 # 交叉概率    # 0.6~0.9
-mutate_prob = 0.1 # 变异概率   # 0.001~0.01
+cross_prob = 0.8 # 交叉概率    # 0.6~0.9
+mutate_prob = 0.2 # 变异概率   # 0.001~0.01
 band_size = 25 # 所有链路带宽均为250
 individual_num = 60 # 种群规模
 r = [0.8, 0.4, 0.6, 1.2, 0.9, 1.3, 0.7, 1.2, 0.8, 1, 1, 1, 1, 1, 1,1.5, 1.5, 1.5, 1.5, 1.5] # 计算适应度值参数：带宽
 band_min = 1 # 带宽需求最小的流所在位置
 w = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1,0.8, 0.8, 0.8, 0.8, 0.8] # 计算适应度时参数：权重
-random.seed(301)
-
-
-# 变异所需要变量
-p_m_max = 0.2
-p_m_min = 0.1
-p_m_prime = 0.15
-f_avg_fixed = 0.01
+random.seed(249)
 
 
 
@@ -94,8 +87,8 @@ def ga(path1, path2):
         print('cross')
 
         def calculate_cross_prob(f_c, f_avg, f_min, f_max):
-            p_c_prime = 0.5
-            p_c_min = 0.6
+            p_c_prime = 0.6
+            p_c_min = 0.4
             p_c_max = 0.9
 
             if f_max == f_avg:
@@ -155,51 +148,19 @@ def ga(path1, path2):
 
         return cross_genes
 
-    # def cross(individual_list):
-    #     print("cross前",individual_list)
-    #     print('cross')
-    #     '''
-    #     交叉
-    #     :param individual_list: 输入种群
-    #     :return: 交叉后的种群
-    #     '''
-    #     cross_genes = []
-    #     for i in range(0, len(individual_list) - 1, 2):
-    #         # 交叉概率
-    #         genes1 = individual_list[i]
-    #         genes2 = individual_list[i + 1]
-    #         if random.random() < cross_prob:
-    #             genes1_fitness = calculate_fitness(genes1)
-    #             genes2_fitness = calculate_fitness(genes2)
-    #             if genes1_fitness == genes2_fitness:
-    #                 cross_genes.append(genes1)
-    #                 cross_genes.append(genes2)
-    #                 continue
-    #             elif genes1_fitness < genes2_fitness:
-    #                 # 获得交叉点
-    #                 point = find_point_not(path, judge_path=genes1)
-    #             elif genes2_fitness < genes1_fitness:
-    #                 # 获得交叉点
-    #                 point = find_point_not(path, judge_path=genes2)
-    #
-    #             new_genes1 = []
-    #             new_genes2 = []
-    #             for i in range(0, point):
-    #                 new_genes1.append(genes1[i])
-    #                 new_genes2.append(genes2[i])
-    #             for i in range(point, K):
-    #                 new_genes1.append(genes2[i])
-    #                 new_genes2.append(genes1[i])
-    #             if judge_load(new_genes1) and judge_load(new_genes2):
-    #                 cross_genes.append(new_genes1)
-    #                 cross_genes.append(new_genes2)
-    #             else:
-    #                 cross_genes.append(genes1)
-    #                 cross_genes.append(genes2)
-    #         else:
-    #             cross_genes.append(genes1)
-    #             cross_genes.append(genes2)
-    #     return cross_genes
+    def calculate_mutate_prob(f_m, f_avg, f_min, f_max):
+        # p_m_max = 0.1
+        # p_m_min = 0.01
+        # p_m_prime = 0.05
+        p_m_max = 0.2
+        p_m_min = 0.1
+        p_m_prime = 0.15
+
+        if f_m < f_avg:
+            p_m = p_m_prime + (p_m_max - p_m_prime) * (f_avg - f_m) / (f_avg - f_min)
+        else:
+            p_m = p_m_prime - (p_m_prime - p_m_min) * (f_m - f_avg) / (f_max - f_avg)
+        return p_m
 
     def mutate(cross_genes):
         print('mutate')
@@ -210,6 +171,13 @@ def ga(path1, path2):
         '''
         mutate_genes = []
         for individual in cross_genes:
+            f_m = max(calculate_fitness(individual), calculate_fitness(individual))
+            f_min = min(calculate_fitness(individual), calculate_fitness(individual))
+            f_max = max(calculate_fitness(individual), calculate_fitness(individual))
+            f_avg = 0.01
+
+            mutate_prob = calculate_mutate_prob(f_m, f_avg, f_min, f_max)
+
             if random.random() < mutate_prob:
                 point = find_point_not(path, judge_path=individual)
                 individual[point] = random.randint(0, len(path) - 1)
@@ -243,10 +211,14 @@ def ga(path1, path2):
         # 计算选择概率
         min_fitness = min(all_fitness)
         max_fitness = max(all_fitness)
-        selection_prob = [(f - min_fitness) / (max_fitness - min_fitness) for f in all_fitness]
+        # selection_prob = [(f - min_fitness) / (max_fitness - min_fitness) for f in all_fitness]
+        if max_fitness == min_fitness:
+            selection_prob = np.array([1 for _ in all_fitness])
+        else:
+            selection_prob = np.array([(f - min_fitness) / (max_fitness - min_fitness) for f in all_fitness])
 
         # 归一化概率
-        selection_prob = np.array(selection_prob)
+        selection_prob = np.array(selection_prob).astype(float)
         selection_prob /= selection_prob.sum()
 
         # 根据概率选择新种群

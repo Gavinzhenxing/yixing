@@ -735,5 +735,7 @@ def get_delay(path):
             if j < len(path[i]) - 1:
                 node_order = str(path[i][j]) + str(path[i][j + 1])
                 route_delay_temp += int(base_delay[node_order])
-        route_delay[i] = route_delay_temp / 3000
+        # route_delay[i] = route_delay_temp / 3000
+        route_delay[i] = route_delay_temp / 1000
+
     return route_delay
